@@ -1,7 +1,7 @@
  # Boostcamp AI Tech 7 CV 06
  
 ## 재활용 품목 분류를 위한 Object Detection
-![image](https://github.com/user-attachments/assets/42997a1b-a4c3-4e5c-b67d-92b217dd277a)
+![image](https://github.com/user-attachments/assets/7dea38fd-73e4-4100-807b-179e1aac4c84)
 ### Description
 바야흐로 대량 생산, 대량 소비의 시대. 우리는 많은 물건이 대량으로 생산되고, 소비되는 시대를 살고 있습니다. 하지만 이러한 문화는 '쓰레기 대란', '매립지 부족'과 같은 여러 사회 문제를 낳고 있습니다.
 
