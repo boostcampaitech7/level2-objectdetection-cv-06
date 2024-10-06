@@ -4,3 +4,6 @@ sample_submission/
 train_result/
 __pycache__/
 output/
+runs/
+submission.csv
+*.pt
