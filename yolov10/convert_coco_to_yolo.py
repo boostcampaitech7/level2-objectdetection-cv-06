@@ -3,6 +3,7 @@ import os
 from tqdm import tqdm
 import yaml
 import random
+import shutil
 
 def convert_bbox_coco2yolo(img_width, img_height, bbox):
     """
@@ -80,6 +81,21 @@ def coco2yolo(coco_data, output_path):
     print(f"Conversion complete. YOLO format labels saved in {output_path}")
     return coco_data['categories']
 
+def copy_images(coco_data, src_dir, dst_dir):
+    """
+    이미지를 소스 디렉토리에서 대상 디렉토리로 복사합니다.
+    """
+    os.makedirs(dst_dir, exist_ok=True)
+    for img in tqdm(coco_data['images'], desc=f"Copying images to {dst_dir}"):
+        file_name = img['file_name']
+        if file_name.startswith('train/') or file_name.startswith('test/'):
+            file_name = os.path.basename(file_name)
+        src_path = os.path.join(src_dir, file_name)
+        dst_path = os.path.join(dst_dir, file_name)
+        if os.path.exists(src_path):
+            shutil.copy(src_path, dst_path)
+        else:
+            print(f"Warning: Source file not found: {src_path}")
 
 # 실행
 train_data, val_data = split_coco_data('../dataset/train.json')
@@ -90,21 +106,26 @@ with open('../dataset/train_yolo.json', 'w') as f:
 with open('../dataset/val_yolo.json', 'w') as f:
     json.dump(val_data, f)
 
+# 이미지 복사
+copy_images(train_data, '../dataset/train', '../dataset/images/train_yolo')
+copy_images(val_data, '../dataset/train', '../dataset/images/val_yolo')
+
 # COCO 형식을 YOLO 형식으로 변환
-train_categories = coco2yolo(train_data, '../dataset/train_labels')
-val_categories = coco2yolo(val_data, '../dataset/val_labels')
+train_categories = coco2yolo(train_data, '../dataset/labels/train_yolo')
+val_categories = coco2yolo(val_data, '../dataset/labels/val_yolo')
 
 # test 데이터 처리
 with open('../dataset/test.json', 'r') as f:
     test_data = json.load(f)
-test_categories = coco2yolo(test_data, '../dataset/test_labels')
+test_categories = coco2yolo(test_data, '../dataset/labels/test')
+copy_images(test_data, '../dataset/test', '../dataset/images/test')
 
 # YOLO 데이터셋 설정 파일 생성
 dataset_config = {
-    'path': '../dataset',
-    'train': 'train_labels',
-    'val': 'val_labels',
-    'test': 'test_labels',
+    'path': '../../dataset',
+    'train': 'images/train_yolo',
+    'val': 'images/val_yolo',
+    'test': 'images/test',
     'nc': len(train_categories),  # 클래스 수
     'names': [cat['name'] for cat in train_categories]
 }
