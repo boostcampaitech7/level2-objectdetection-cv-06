@@ -14,7 +14,7 @@ def xywh_to_xyxy(x_center, y_center, width, height):
 
 def main():
     # 모델 로드
-    model = YOLO('yolov10_custom.pt')  # 학습된 모델 경로
+    model = YOLO('best.pt')  # 학습된 모델 경로
 
     # 테스트 데이터 경로
     test_dir = '../dataset/images/test'
