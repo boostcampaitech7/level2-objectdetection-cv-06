@@ -1,6 +1,7 @@
 dataset/
 baseline/
 sample_submission/
+output/
 train_result/
 __pycache__/
 output/
