@@ -131,9 +131,9 @@ fold_data = split_coco_data('../dataset/train.json', n_splits=5)
 
 for fold, (train_data, val_data) in enumerate(fold_data, 1):
     # train_yolo.json과 val_yolo.json 저장
-    with open(f'../dataset/train_yolo_fold{fold}.json', 'w') as f:
+    with open(f'../dataset/json/train_yolo_fold{fold}.json', 'w') as f:
         json.dump(train_data, f)
-    with open(f'../dataset/val_yolo_fold{fold}.json', 'w') as f:
+    with open(f'../dataset/json/val_yolo_fold{fold}.json', 'w') as f:
         json.dump(val_data, f)
 
     # 이미지 복사
@@ -154,13 +154,13 @@ for fold, (train_data, val_data) in enumerate(fold_data, 1):
         'names': [cat['name'] for cat in train_categories]
     }
 
-    with open(f'../dataset/dataset_fold{fold}.yaml', 'w') as f:
+    with open(f'../dataset/yaml/dataset_fold{fold}.yaml', 'w') as f:
         yaml.dump(dataset_config, f)
 
     print(f"Dataset configuration for fold {fold} saved as dataset_fold{fold}.yaml")
 
 # test 데이터 처리
-with open('../dataset/test.json', 'r') as f:
+with open('../dataset/json/test.json', 'r') as f:
     test_data = json.load(f)
 test_categories = coco2yolo(test_data, '../dataset/labels/test')
 copy_images(test_data, '../dataset/test', '../dataset/images/test')
