@@ -3,8 +3,10 @@ baseline/
 sample_submission/
 output/
 train_result/
+CV Object Detection/
 __pycache__/
 output/
 runs/
+wandb/
 submission.csv
 *.pt
