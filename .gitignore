@@ -10,3 +10,4 @@ runs/
 wandb/
 submission.csv
 *.pt
+nohup.out
