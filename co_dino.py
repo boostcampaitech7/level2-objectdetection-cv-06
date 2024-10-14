@@ -1,5 +1,22 @@
 #### inheritance
-_base_ = ['./projects/CO-DETR/configs/codino/co_dino_5scale_swin_l_lsj_16xb1_3x_coco.py']
+_base_ = ['../projects/CO-DETR/configs/codino/co_dino_5scale_swin_l_lsj_16xb1_3x_coco.py']
+
+### Dataset Config
+dataset_type = 'CocoDataset'
+classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
+           "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
+
+data_root = '../../dataset/'
+max_epochs = 8
+
+### Model config
+image_size = (1024, 1024)
+num_dec_layer = 6
+loss_lambda = 2.0
+num_classes = 10
+
+# 모델 로드 경로 설정
+load_from = './checkpoints/co_dino_5scale_lsj_swin_large_1x_coco-3af73af2.pth'
 
 #### hook config
 default_hooks = dict(
@@ -33,23 +50,16 @@ visualizer = dict(
     type='DetLocalVisualizer',
     vis_backends=[
         dict(type='LocalVisBackend'),
-        dict(type='WandbVisBackend'),
+        # dict(type='WandbVisBackend'),
     ])
 log_processor = dict(
     type='LogProcessor',  # Log processor to process runtime logs
     window_size=50,  # Smooth interval of log values
     by_epoch=True)  # Whether to format logs with epoch type. Should be consistent with the train loop's type.
 log_level = 'INFO'  # The level of logging.
-# 모델 로드 경로 설정
-load_from = './checkpoints/co_dino_5scale_lsj_swin_large_1x_coco-3af73af2.pth'
 resume = False  # Whether to resume from the checkpoint defined in `load_from`. If `load_from` is None, it will resume the latest checkpoint in the `work_dir`.
-fp16 = dict(loss_scale='dynamic')
 
-### Model config
-image_size = (1024, 1024)
-num_dec_layer = 6
-loss_lambda = 2.0
-num_classes = 10
+### Model
 batch_augments = [
     dict(type='BatchFixedSizePad', size=image_size, pad_mask=True)
 ]
@@ -123,15 +133,10 @@ model = dict(
     ],
 )
 
-# 데이터셋 설정
-dataset_type = 'CocoDataset'
-classes = ("General trash", "Paper", "Paper pack", "Metal", "Glass", 
-           "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
-
-data_root = '../../dataset/'
-
-train_cfg = dict(max_epochs=5)
-train_pipeline = [
+# Dataset
+fp16 = dict(loss_scale='dynamic') # mixed-precision
+train_cfg = dict(max_epochs=max_epochs, type='EpochBasedTrainLoop', val_interval=1)
+load_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
     dict(
@@ -150,15 +155,25 @@ train_pipeline = [
     dict(type='Pad', size=image_size, pad_val=dict(img=(114, 114, 114))),
 ]
 
+train_pipeline = [
+    dict(max_num_pasted=100, paste_by_box=True, type='CopyPaste'),
+    dict(type='PackDetInputs'),
+]
+
 train_dataloader = dict(
     batch_size=1,
     num_workers=8,
     dataset=dict(
-        data_root='../../dataset/',
-        ann_file='train_sep.json',
-        dataset=dict(pipeline=train_pipeline),
-        metainfo=dict(classes=classes)
-        ))
+        pipeline=train_pipeline,
+        dataset=dict(
+            data_root=data_root,
+            data_prefix=dict(img=''),
+            ann_file='train_sep.json',
+            pipeline=load_pipeline,
+            metainfo=dict(classes=classes)
+        )
+    )
+)
 
 test_pipeline = [
     dict(type='LoadImageFromFile'),
@@ -171,37 +186,40 @@ test_pipeline = [
                    'scale_factor'))
 ]
 
-val_dataloader = dict(dataset=dict(
-    pipeline=test_pipeline,
+val_dataloader = dict(
     num_workers=8,
-    data_root='../../dataset/',
-    ann_file='val_sep.json',
-    metainfo=dict(classes=classes)
-    ))
+    dataset=dict(
+        pipeline=test_pipeline,
+        data_prefix=dict(img=''),
+        data_root=data_root,
+        ann_file='val_sep.json',
+        metainfo=dict(classes=classes)
+    )
+)
 
 val_evaluator = dict(
     _scope_='mmdet',
-    ann_file='../../dataset/val_sep.json',
+    ann_file=data_root + 'val_sep.json',
     backend_args=None,
     format_only=False,
     metric='bbox',
-    type='CocoMetric')
+    type='CocoMetric'
+)
 
-test_dataloader = dict(dataset=dict(
-    pipeline=test_pipeline,
+test_dataloader = dict(
     num_workers=8,
-    data_root='../../dataset/',
-    ann_file='test.json',
-    metainfo=dict(classes=classes)
-    ))
+    dataset=dict(
+        pipeline=test_pipeline,
+        data_prefix=dict(img=''),
+        data_root=data_root,
+        ann_file='test.json',
+        metainfo=dict(classes=classes)
+    )
+)
 
-test_evaluator = dict(
-    _scope_='mmdet',
-    ann_file='../../dataset/test.json',
-    backend_args=None,
-    format_only=False,
-    metric='bbox',
-    save_results_to_json=True,
-    outfile_prefix='./work_dirs/co_dino_trash',
-    type='CocoMetric')
-
+param_scheduler = [
+    dict(
+        type='MultiStepLR', 
+        end=max_epochs, 
+        milestones=[30])
+]
