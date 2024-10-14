@@ -127,7 +127,7 @@ def copy_images(coco_data, src_dir, dst_dir):
             print(f"Warning: Source file not found: {src_path}")
 
 # 실행
-fold_data = split_coco_data('../dataset/train.json', n_splits=5)
+fold_data = split_coco_data('../dataset/json/train.json', n_splits=5)
 
 for fold, (train_data, val_data) in enumerate(fold_data, 1):
     # train_yolo.json과 val_yolo.json 저장
