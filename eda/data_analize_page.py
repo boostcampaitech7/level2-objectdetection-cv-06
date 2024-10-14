@@ -38,14 +38,18 @@ def read_data_from_json_by_columns(filename):
 
 @st.cache_data
 def load_json_data():
-    with open('../../dataset/train.json') as t:
+    with open('../../dataset/json/train.json') as t:
         train_data = json.loads(t.read())
-    with open('../../dataset/test.json') as t:
+    with open('../../dataset/json/test.json') as t:
         test_data = json.loads(t.read())
+    with open('../../dataset/splits/val_fold4.json') as v:
+        valid_data = json.loads(v.read())
     test = read_data_from_json_by_columns(test_data)
     train = read_data_from_json_by_columns(train_data)
+    valid = read_data_from_json_by_columns(valid_data)
     train['images']['annotation_num'] = train['annotations']['image_id'].value_counts()
-    return test, train, test_data, train_data
+    valid['images']['annotation_num'] = valid['annotations']['image_id'].value_counts()
+    return test, train, valid, test_data, train_data, valid_data
 # 출력 - train, test 데이터프레임 딕셔너리
 
 # 데이터 페이지 단위로 데이터프레임 스플릿
@@ -214,11 +218,11 @@ def main():
     option = st.sidebar.selectbox("데이터 선택",("이미지 데이터", "원본 데이터", "트랜스폼 테스트"))
 
     # 데이터 로드
-    testd, traind, testjson, trainjson = load_json_data()
+    testd, traind, validd, testjson, trainjson, validjson = load_json_data()
 
     if option == "이미지 데이터":
         # 트레인 데이터 출력
-        choose_data = st.sidebar.selectbox("트레인/테스트", ("train", "test"))
+        choose_data = st.sidebar.selectbox("트레인/검증/테스트", ("train", "valid", "test"))
 
         if choose_data == "train":
             st.header("트레인 데이터")
@@ -262,9 +266,53 @@ def main():
                 col1.write(d)
                 col2.bar_chart(d, height=400)
 
+        elif choose_data == "valid":
+            st.header("검증 데이터")
+            dir = 'output/valid'
+            csv = csv_list(dir)
+
+            choose_csv = st.sidebar.selectbox("output.csv적용",("안함",)+tuple(csv))
+            annotationdf = pd.DataFrame()
+            if choose_csv != "안함":
+                annotationdf = csv_to_dataframe(dir, choose_csv)
+                validd['images']['annotation_num'] = annotationdf['image_id'].value_counts()
+
+            show_dataframe(validd['images'], validd['annotations'], st, '../../dataset/')
+
+            if st.sidebar.checkbox("데이터 시각화"):
+                st.header("annotations 분석")
+                st.dataframe(validd['annotations'])
+    
+                st.subheader("이미지당 annotation의 수")
+                d = validd['annotations']['image_id'].value_counts().sort_index()
+                maxd, meand, mediand, stdd = d.max(), d.mean(), d.median(), d.std()
+                st.write("Annotation count max: ", maxd, "Annotation count mean: ", meand, "Annotation count median: ", mediand, "Annotation count std: ", stdd)
+                st.bar_chart(d, height=400)
+                st.subheader("n개의 annotation을 가진 이미지의 수")
+                col1, col2 = st.columns((1,7))
+                col1.write(d.value_counts().sort_index().rename('coc'))
+                col2.bar_chart(d.value_counts().sort_index().rename('coc'),height=400)
+
+                st.subheader("bbox area 분포")
+                dt = validd['annotations']['area']
+                d = dt.round(-3).value_counts().sort_index()
+                maxd, meand, mediand, mind = dt.max(), dt.mean(), dt.median(), dt.min()
+                st.write("area min: ", mind, "area max: ", maxd, "area mean: ", meand, "area median: ", mediand)
+                col1, col2 = st.columns((1,7))
+                col1.write(d)
+                col2.bar_chart(d, height=400)
+
+                st.subheader("cartegory 분포")
+                d = validd['annotations']['category_id'].value_counts(normalize=True).sort_index()
+                maxd, meand, mediand, mind = d.max(), d.mean(), d.median(), d.min()
+                st.write("cartegory count min: ", mind, "cartegory count max: ", maxd, "cartegory count mean: ", meand, "cartegory count median: ", mediand)
+                col1, col2 = st.columns((1,7))
+                col1.write(d)
+                col2.bar_chart(d, height=400)
+
         elif choose_data == "test":
             st.header("테스트 데이터")
-            dir = 'output'
+            dir = 'output/test'
             csv = csv_list(dir)
 
             choose_csv = st.sidebar.selectbox("output.csv적용",("안함",)+tuple(csv))
@@ -276,11 +324,14 @@ def main():
             show_dataframe(testd['images'],annotationdf,st,'../../dataset/')
 
     elif option == "원본 데이터":
-        choose_data = st.sidebar.selectbox("트레인/테스트", ("train", "test"))
+        choose_data = st.sidebar.selectbox("트레인/검증/테스트", ("train", "valid", "test"))
 
         if choose_data == "train":
             st.subheader("train.json")
             data = trainjson
+        elif choose_data == "valid":
+            st.subheader("val_fold4.json")
+            data = validjson
         elif choose_data == "test":
             st.subheader("test.json")
             data = testjson
