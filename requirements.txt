@@ -9,5 +9,4 @@ torchnet==0.0.4
 pandas
 map-boxes==1.0.5
 jupyter==1.0.0
-openmim
-mmcv-full==1.7.0
+iterative-stratification
