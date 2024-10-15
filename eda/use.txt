@@ -1,0 +1,7 @@
+https://github.com/kimyoungseok3232/streamlit_for_Object_Detection?tab=readme-ov-file
+
+
+1. cd eda/ 
+2.  pip install --upgrade albumentations
+3. 
+streamlit run data_analize_page.py --server.runOnSave=true
