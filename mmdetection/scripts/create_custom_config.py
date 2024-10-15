@@ -8,22 +8,22 @@ sys.path.append('/data/ephemeral/home/jaehuni/level2-objectdetection-cv-06/mmdet
 cfg = Config.fromfile('../projects/CO-DETR/configs/codino/co_dino_5scale_r50_lsj_8xb2_1x_coco_nomask.py')
 
 # 사용자 정의 설정
-cfg.load_from = './checkpoints/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth'
+cfg.load_from = '../checkpoints/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth'
 
 cfg.train_dataloader.batch_size = 1
 cfg.train_dataloader.num_workers = 8
 
 cfg.model.backbone.frozen_stages = -1
-cfg.num_classes = 10
 
 cfg.max_epochs = 1
+cfg.train_cfg.max_epochs = cfg.max_epochs
 
 cfg.metainfo = {
     'classes': ("General trash", "Paper", "Paper pack", "Metal", "Glass",
                 "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
 }
 
-cfg.data_root = '../dataset'
+cfg.data_root = '../../dataset'
 cfg.train_dataloader.dataset.dataset.ann_file = 'json/splits/train_fold4.json'
 cfg.train_dataloader.dataset.dataset.data_root = cfg.data_root
 cfg.train_dataloader.dataset.dataset.data_prefix.img = ''
@@ -56,8 +56,11 @@ cfg.visualizer.vis_backends = [
     dict(type='WandbVisBackend'),
 ]
 
+config_name = 'co_dino_5scale_r50_lsj_8xb2_1x_trash'
+cfg.work_dir = f'../work_dirs/{config_name}'
+
 # 설정 파일 저장
-config_path = '../custom_configs/co_dino_5scale_r50_lsj_8xb2_1x_trash.py'
+config_path = f'../custom_configs/{config_name}.py'
 cfg.dump(config_path)
 
 print(f"Custom config saved to {config_path}")
