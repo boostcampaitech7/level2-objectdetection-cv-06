@@ -63,8 +63,8 @@ def save_coco_split(data, output_file):
 
 # 실행
 if __name__ == "__main__":
-    input_json = '../dataset/json/train.json'
-    output_dir = '../dataset/splits'
+    input_json = '../../../dataset/json/train.json'
+    output_dir = '../../../dataset/json/splits'
     os.makedirs(output_dir, exist_ok=True)
 
     fold_data = split_coco_data(input_json, n_splits=5)

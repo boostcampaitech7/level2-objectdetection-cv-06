@@ -14,10 +14,10 @@ def xywh_to_xyxy(x_center, y_center, width, height):
 
 def main():
     # 모델 로드
-    model = YOLO('CV Object Detection/yolo11x_fold12/weights/best.pt')  # 학습된 모델 경로
-
+    model = YOLO('../CV Object Detection/yolo11x_fold4/weights/best.pt')  # 학습된 모델 경로
+    
     # 테스트 데이터 경로
-    test_dir = '../dataset/images/test'
+    test_dir = '../../../dataset/test'
 
     # 결과를 저장할 리스트
     results_list = []
@@ -25,7 +25,7 @@ def main():
     # 테스트 이미지에 대해 추론 수행
     for img_name in sorted(os.listdir(test_dir)):
         img_path = os.path.join(test_dir, img_name)
-        results = model(img_path)
+        results = model(img_path, conf=0.05, iou=0.1)
 
         # 결과 처리
         predictions = []
@@ -45,7 +45,7 @@ def main():
         results_list.append([' '.join(predictions), image_id])
 
     # 결과를 CSV 파일로 저장
-    with open('output/submission.csv', 'w', newline='') as f:
+    with open('submission.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['PredictionString', 'image_id'])
         writer.writerows(results_list)
