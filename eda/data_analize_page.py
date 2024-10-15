@@ -43,7 +43,7 @@ def load_json_data():
         train_data = json.loads(t.read())
     with open('../../dataset/json/test.json') as t:
         test_data = json.loads(t.read())
-    with open('../../dataset/splits/val_fold4.json') as v:
+    with open('../../dataset/json/train.json') as v:
         valid_data = json.loads(v.read())
     test = read_data_from_json_by_columns(test_data)
     train = read_data_from_json_by_columns(train_data)
