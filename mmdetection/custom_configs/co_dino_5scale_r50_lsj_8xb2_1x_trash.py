@@ -14,12 +14,8 @@ data_root = '../dataset'
 dataset_type = 'CocoDataset'
 default_hooks = dict(
     checkpoint=dict(
-        _scope_='mmdet',
-        by_epoch=True,
-        interval=4,
-        max_keep_ckpts=3,
-        type='CheckpointHook'),
-    logger=dict(_scope_='mmdet', interval=50, type='LoggerHook'),
+        interval=1, max_keep_ckpts=2, save_best='auto', type='CheckpointHook'),
+    logger=dict(_scope_='mmdet', interval=1, type='LoggerHook'),
     param_scheduler=dict(_scope_='mmdet', type='ParamSchedulerHook'),
     sampler_seed=dict(_scope_='mmdet', type='DistSamplerSeedHook'),
     timer=dict(_scope_='mmdet', type='IterTimerHook'),
@@ -76,7 +72,7 @@ log_level = 'INFO'
 log_processor = dict(
     _scope_='mmdet', by_epoch=True, type='LogProcessor', window_size=50)
 loss_lambda = 2.0
-max_epochs = 12
+max_epochs = 1
 max_iters = 270000
 metainfo = dict(
     classes=(
