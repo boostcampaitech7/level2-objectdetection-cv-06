@@ -9,8 +9,6 @@ from mmengine.runner import Runner
 
 from mmdet.utils import setup_cache_size_limit_of_dynamo
 
-import sys
-sys.path.append('/data/ephemeral/home/jaehuni/level2-objectdetection-cv-06/mmdetection')
 
 
 def parse_args():
