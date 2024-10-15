@@ -1,7 +1,7 @@
 auto_scale_lr = dict(base_batch_size=16)
 backend_args = None
 batch_augments = [
-    dict(pad_mask=True, size=(
+    dict(pad_mask=False, size=(
         1024,
         1024,
     ), type='BatchFixedSizePad'),
@@ -37,7 +37,7 @@ image_size = (
 load_from = './checkpoints/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth'
 load_pipeline = [
     dict(type='LoadImageFromFile'),
-    dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+    dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
     dict(
         keep_ratio=True,
         ratio_range=(
@@ -155,10 +155,11 @@ model = dict(
     ],
     data_preprocessor=dict(
         batch_augments=[
-            dict(pad_mask=True, size=(
-                1024,
-                1024,
-            ), type='BatchFixedSizePad'),
+            dict(
+                pad_mask=False, size=(
+                    1024,
+                    1024,
+                ), type='BatchFixedSizePad'),
         ],
         bgr_to_rgb=True,
         mean=[
@@ -166,7 +167,7 @@ model = dict(
             116.28,
             103.53,
         ],
-        pad_mask=True,
+        pad_mask=False,
         std=[
             58.395,
             57.12,
@@ -476,7 +477,7 @@ test_dataloader = dict(
                     1024,
                 ),
                 type='Pad'),
-            dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+            dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
             dict(
                 meta_keys=(
                     'img_id',
@@ -514,7 +515,7 @@ test_pipeline = [
         1024,
         1024,
     ), type='Pad'),
-    dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+    dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
     dict(
         meta_keys=(
             'img_id',
@@ -551,7 +552,7 @@ train_dataloader = dict(
                 )),
             pipeline=[
                 dict(type='LoadImageFromFile'),
-                dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+                dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
                 dict(
                     keep_ratio=True,
                     ratio_range=(
@@ -591,7 +592,7 @@ train_dataloader = dict(
             ],
             type='CocoDataset'),
         pipeline=[
-            dict(max_num_pasted=100, type='CopyPaste'),
+            dict(max_num_pasted=100, paste_by_box=True, type='CopyPaste'),
             dict(type='PackDetInputs'),
         ],
         type='MultiImageMixDataset'),
@@ -599,7 +600,7 @@ train_dataloader = dict(
     persistent_workers=True,
     sampler=dict(_scope_='mmdet', shuffle=True, type='DefaultSampler'))
 train_pipeline = [
-    dict(max_num_pasted=100, type='CopyPaste'),
+    dict(max_num_pasted=100, paste_by_box=True, type='CopyPaste'),
     dict(type='PackDetInputs'),
 ]
 val_cfg = dict(_scope_='mmdet', type='ValLoop')
@@ -641,7 +642,7 @@ val_dataloader = dict(
                     1024,
                 ),
                 type='Pad'),
-            dict(type='LoadAnnotations', with_bbox=True, with_mask=True),
+            dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
             dict(
                 meta_keys=(
                     'img_id',
