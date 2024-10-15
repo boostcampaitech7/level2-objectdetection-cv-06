@@ -10,7 +10,7 @@ custom_imports = dict(
     allow_failed_imports=False, imports=[
         'projects.CO-DETR.codetr',
     ])
-data_root = '../dataset'
+data_root = '../../dataset'
 dataset_type = 'CocoDataset'
 default_hooks = dict(
     checkpoint=dict(
@@ -30,7 +30,7 @@ image_size = (
     1024,
     1024,
 )
-load_from = './checkpoints/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth'
+load_from = '../checkpoints/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth'
 load_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
@@ -145,7 +145,7 @@ model = dict(
                 loss_weight=12.0,
                 type='FocalLoss',
                 use_sigmoid=True),
-            num_classes=80,
+            num_classes=10,
             stacked_convs=1,
             type='CoATSSHead'),
     ],
@@ -198,7 +198,7 @@ model = dict(
             type='QualityFocalLoss',
             use_sigmoid=True),
         loss_iou=dict(loss_weight=2.0, type='GIoULoss'),
-        num_classes=80,
+        num_classes=10,
         num_query=900,
         positional_encoding=dict(
             normalize=True,
@@ -282,7 +282,7 @@ model = dict(
                     loss_weight=12.0,
                     type='CrossEntropyLoss',
                     use_sigmoid=False),
-                num_classes=80,
+                num_classes=10,
                 reg_class_agnostic=False,
                 reg_decoded_bbox=True,
                 roi_feat_size=7,
@@ -442,7 +442,7 @@ test_dataloader = dict(
         ann_file='json/splits/val_fold4.json',
         backend_args=None,
         data_prefix=dict(img=''),
-        data_root='../dataset',
+        data_root='../../dataset',
         metainfo=dict(
             classes=(
                 'General trash',
@@ -492,7 +492,7 @@ test_dataloader = dict(
     sampler=dict(_scope_='mmdet', shuffle=False, type='DefaultSampler'))
 test_evaluator = dict(
     _scope_='mmdet',
-    ann_file='../dataset/json/splits/val_fold4.json',
+    ann_file='../../dataset/json/splits/val_fold4.json',
     backend_args=None,
     format_only=False,
     metric='bbox',
@@ -522,7 +522,7 @@ test_pipeline = [
         ),
         type='PackDetInputs'),
 ]
-train_cfg = dict(max_epochs=12, type='EpochBasedTrainLoop', val_interval=1)
+train_cfg = dict(max_epochs=1, type='EpochBasedTrainLoop', val_interval=1)
 train_dataloader = dict(
     batch_size=1,
     dataset=dict(
@@ -531,7 +531,7 @@ train_dataloader = dict(
             ann_file='json/splits/train_fold4.json',
             backend_args=None,
             data_prefix=dict(img=''),
-            data_root='../dataset',
+            data_root='../../dataset',
             filter_cfg=dict(filter_empty_gt=False, min_size=32),
             metainfo=dict(
                 classes=(
@@ -607,7 +607,7 @@ val_dataloader = dict(
         ann_file='json/splits/val_fold4.json',
         backend_args=None,
         data_prefix=dict(img=''),
-        data_root='../dataset',
+        data_root='../../dataset',
         metainfo=dict(
             classes=(
                 'General trash',
@@ -657,7 +657,7 @@ val_dataloader = dict(
     sampler=dict(_scope_='mmdet', shuffle=False, type='DefaultSampler'))
 val_evaluator = dict(
     _scope_='mmdet',
-    ann_file='../dataset/json/splits/val_fold4.json',
+    ann_file='../../dataset/json/splits/val_fold4.json',
     backend_args=None,
     format_only=False,
     metric='bbox',
@@ -673,3 +673,4 @@ visualizer = dict(
         dict(type='LocalVisBackend'),
         dict(type='WandbVisBackend'),
     ])
+work_dir = '../work_dirs/co_dino_5scale_r50_lsj_8xb2_1x_trash'
