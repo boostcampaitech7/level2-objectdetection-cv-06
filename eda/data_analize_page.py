@@ -387,16 +387,5 @@ def main():
             transform_list.append(A.CenterCrop(width=w, height=h, p=1))
             img, tlist, tset = get_image(image_data[choose_data][0],traind['annotations'][traind['annotations']['image_id']==image_data[choose_data][1]][['image_id','bbox','category_id']],transform)
             col2.image(img)
-def login(password, auth):
-    if password in auth:
-        st.session_state['login'] = True
-    else:
-        st.write('need password')
-
-if 'login' not in st.session_state or st.session_state['login'] == False:
-    auth = set(['T7107'])
-    password = st.sidebar.text_input('password',type='password')
-    button = st.sidebar.button('login',on_click=login(password, auth))
-
-elif st.session_state['login'] == True:
-    main()
+# main() 함수를 직접 호출
+main()
