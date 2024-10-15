@@ -5,6 +5,8 @@ import json
 import cv2
 import numpy as np
 import albumentations as A
+from sklearn.metrics import average_precision_score
+
 st.set_page_config(page_title="데이터 분석 및 개별 이미지 확인용", layout="wide")
 
 global categories, colors1, colors2
@@ -22,7 +24,6 @@ colors1 = [
     (255, 192, 203) # Pink
 ]
 colors2 = ['red', 'green', 'blue', 'yellow', 'orange', 'purple', 'cyan', 'magenta', 'brown', 'pink']
-
 
 # json 파일에서 각 key 별로 데이터 불러와서 dataframe으로 변환 후 리스트에 넣고 리스트 반환
 # 입력 - json 파일
@@ -213,15 +214,50 @@ def show_dataframe(img,anno,window,type):
     else:
         show_images(type, pages[current_page - 1][['file_name','id']], pd.DataFrame(), con2)
 
+def calculate_metrics(ground_truth, predictions):
+    # True Positive, False Positive, False Negative 계산
+    tp = len(predictions[predictions['is_true'] == 1])
+    fp = len(predictions[predictions['is_true'] == 0])
+    fn = len(ground_truth[~ground_truth['image_id'].isin(predictions['image_id'])])
+
+    return tp, fp, fn
+
+def calculate_ap(ground_truth, predictions):
+    ap_per_class = {}
+    for category in range(len(categories)):
+        gt = ground_truth[ground_truth['category_id'] == category]
+        pred = predictions[predictions['category_id'] == category]
+        
+        if len(gt) == 0:
+            continue
+        
+        # AP 계산
+        y_true = [1] * len(gt) + [0] * len(pred)
+        y_scores = list(gt['confidence']) + list(pred['confidence'])
+        
+        ap = average_precision_score(y_true, y_scores)
+        ap_per_class[categories[category]] = ap
+
+    return ap_per_class
+
+def show_metrics(ground_truth, predictions):
+    tp, fp, fn = calculate_metrics(ground_truth, predictions)
+    st.write(f"True Positives: {tp}")
+    st.write(f"False Positives: {fp}")
+    st.write(f"False Negatives: {fn}")
+
+    ap_per_class = calculate_ap(ground_truth, predictions)
+    st.write("Average Precision per class:")
+    for category, ap in ap_per_class.items():
+        st.write(f"{category}: {ap:.2f}")
+
 def main():
-    # 원본데이터 확인 가능 아웃풋도 확인하도록 할 수 있을 듯?
     option = st.sidebar.selectbox("데이터 선택",("이미지 데이터", "원본 데이터", "트랜스폼 테스트"))
 
     # 데이터 로드
     testd, traind, validd, testjson, trainjson, validjson = load_json_data()
 
     if option == "이미지 데이터":
-        # 트레인 데이터 출력
         choose_data = st.sidebar.selectbox("트레인/검증/테스트", ("train", "valid", "test"))
 
         if choose_data == "train":
@@ -276,6 +312,13 @@ def main():
             if choose_csv != "안함":
                 annotationdf = csv_to_dataframe(dir, choose_csv)
                 validd['images']['annotation_num'] = annotationdf['image_id'].value_counts()
+
+                # Ground Truth와 Predictions 비교
+                ground_truth = validd['annotations']
+                predictions = annotationdf.copy()
+                predictions['is_true'] = predictions['image_id'].isin(ground_truth['image_id']).astype(int)
+
+                show_metrics(ground_truth, predictions)
 
             show_dataframe(validd['images'], validd['annotations'], st, '../../dataset/')
 
