@@ -584,7 +584,7 @@ train_dataloader = dict(
                     ),
                     type='RandomResize'),
                 dict(
-                    allow_negative_crop=True,
+                    allow_negative_crop=True, 
                     crop_size=(
                         1280,
                         1280,
