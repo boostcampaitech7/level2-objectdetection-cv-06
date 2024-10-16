@@ -5,17 +5,17 @@ import sys
 sys.path.append('..')
 
 # 기본 설정 파일 로드
-cfg = Config.fromfile('../projects/CO-DETR/configs/codino/co_dino_5scale_r50_lsj_8xb2_1x_coco_nomask.py')
+cfg = Config.fromfile('../projects/CO-DETR/configs/codino/co_dino_5scale_swin_l_lsj_16xb1_1x_coco_nomask.py')
 
 # 사용자 정의 설정
-cfg.load_from = '../checkpoints/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth'
+cfg.load_from = '../checkpoints/co_dino_5scale_lsj_swin_large_1x_coco-3af73af2'
 
 cfg.train_dataloader.batch_size = 1
 cfg.train_dataloader.num_workers = 8
 
 cfg.model.backbone.frozen_stages = -1
 
-cfg.max_epochs = 1
+cfg.max_epochs = 100
 cfg.train_cfg.max_epochs = cfg.max_epochs
 
 cfg.metainfo = {
@@ -56,7 +56,7 @@ cfg.visualizer.vis_backends = [
     dict(type='WandbVisBackend'),
 ]
 
-config_name = 'co_dino_5scale_r50_lsj_8xb2_1x_trash'
+config_name = 'co_dino_5scale_lsj_swin_large_1x_coco_trash'
 cfg.work_dir = f'../work_dirs/{config_name}'
 
 # 설정 파일 저장
