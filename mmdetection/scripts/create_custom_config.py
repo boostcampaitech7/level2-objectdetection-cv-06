@@ -2,7 +2,7 @@ from mmengine import Config
 from mmengine.runner import set_random_seed
 
 import sys
-sys.path.append('/data/ephemeral/home/jaehuni/level2-objectdetection-cv-06/mmdetection')
+sys.path.append('..')
 
 # 기본 설정 파일 로드
 cfg = Config.fromfile('../projects/CO-DETR/configs/codino/co_dino_5scale_r50_lsj_8xb2_1x_coco_nomask.py')
