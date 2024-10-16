@@ -1,6 +1,12 @@
 dataset/
 baseline/
 sample_submission/
-train_result/
-__pycache__/
 output/
+train_result/
+CV Object Detection/
+__pycache__/
+runs/
+wandb/
+submission.csv
+*.pt
+nohup.out
