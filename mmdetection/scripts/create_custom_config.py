@@ -5,7 +5,8 @@ import sys
 sys.path.append('..')
 
 # 기본 설정 파일 로드
-cfg = Config.fromfile('../projects/CO-DETR/configs/codino/co_dino_5scale_r50_lsj_8xb2_1x_coco_nomask.py')
+config_name = 'co_dino_5scale_r50_lsj_8xb2_1x_coco_nomask'
+cfg = Config.fromfile(f'../projects/CO-DETR/configs/codino/{config_name}.py')
 
 # 사용자 정의 설정
 cfg.load_from = '../checkpoints/co_dino_5scale_r50_lsj_8xb2_1x_coco-69a72d67.pth'
@@ -56,11 +57,11 @@ cfg.visualizer.vis_backends = [
     dict(type='WandbVisBackend'),
 ]
 
-config_name = 'co_dino_5scale_r50_lsj_8xb2_1x_trash'
-cfg.work_dir = f'../work_dirs/{config_name}'
+custom_config_name = config_name + '_trash'
+cfg.work_dir = f'../work_dirs/{custom_config_name}'
 
 # 설정 파일 저장
-config_path = f'../custom_configs/{config_name}.py'
+config_path = f'../custom_configs/{custom_config_name}.py'
 cfg.dump(config_path)
 
 print(f"Custom config saved to {config_path}")
