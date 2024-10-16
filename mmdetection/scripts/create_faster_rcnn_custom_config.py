@@ -25,10 +25,10 @@ cfg.metainfo = {
 
 
 cfg.data_root = '../../dataset'
-cfg.train_dataloader.dataset.dataset.ann_file = 'json/splits/train_fold4.json'
-cfg.train_dataloader.dataset.dataset.data_root = cfg.data_root
-cfg.train_dataloader.dataset.dataset.data_prefix.img = ''
-cfg.train_dataloader.dataset.dataset.metainfo = cfg.metainfo
+cfg.train_dataloader.dataset.ann_file = 'json/splits/train_fold4.json'
+cfg.train_dataloader.dataset.data_root = cfg.data_root
+cfg.train_dataloader.dataset.data_prefix.img = ''
+cfg.train_dataloader.dataset.metainfo = cfg.metainfo
 
 cfg.val_dataloader.dataset.ann_file = 'json/splits/val_fold4.json'
 cfg.val_dataloader.dataset.data_root = cfg.data_root
