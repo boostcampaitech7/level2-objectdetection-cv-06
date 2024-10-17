@@ -3,7 +3,7 @@ import wandb
 
 def main():
     # 학습 설정
-    data_yaml = '../dataset/yaml/dataset_fold1.yaml'
+    data_yaml = '../dataset/yaml/dataset_fold4.yaml'
     epochs = 100
     batch_size = 8
     img_size = 1024
@@ -20,11 +20,12 @@ def main():
         batch=batch_size,
         device=device,
         project='CV Object Detection',
-        name='yolo11x_fold1'
+        name='yolo11x_augmix',
+        auto_augment='augmix'
     )
 
     # 학습된 모델 저장
-    model.save('yolo11x_fold1.pt')
+    model.save('yolo11x_augmix.pt')
 
 if __name__ == '__main__':
     main()

@@ -14,10 +14,10 @@ def xywh_to_xyxy(x_center, y_center, width, height):
 
 def main():
     # 모델 로드
-    model = YOLO('../CV Object Detection/yolo11x_fold4/weights/best.pt')  # 학습된 모델 경로
+    model = YOLO('CV Object Detection/yolo11x_delete_outliers/weights/best.pt')  # 학습된 모델 경로
     
     # 테스트 데이터 경로
-    test_dir = '../../../dataset/test'
+    test_dir = '../dataset/test'
 
     # 결과를 저장할 리스트
     results_list = []
