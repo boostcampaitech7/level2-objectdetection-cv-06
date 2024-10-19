@@ -53,6 +53,22 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
 - openmim
 - mmcv-full==1.7.0
 
+## Citation
+
+```
+@article{mmdetection,
+  title   = {{MMDetection}: Open MMLab Detection Toolbox and Benchmark},
+  author  = {Chen, Kai and Wang, Jiaqi and Pang, Jiangmiao and Cao, Yuhang and
+             Xiong, Yu and Li, Xiaoxiao and Sun, Shuyang and Feng, Wansen and
+             Liu, Ziwei and Xu, Jiarui and Zhang, Zheng and Cheng, Dazhi and
+             Zhu, Chenchen and Cheng, Tianheng and Zhao, Qijie and Li, Buyu and
+             Lu, Xin and Zhu, Rui and Wu, Yue and Dai, Jifeng and Wang, Jingdong
+             and Shi, Jianping and Ouyang, Wanli and Loy, Chen Change and Lin, Dahua},
+  journal= {arXiv preprint arXiv:1906.07155},
+  year={2019}
+}
+```
+```
 @software{yolo11_ultralytics,
   author = {Glenn Jocher and Jing Qiu},
   title = {Ultralytics YOLO11},
@@ -62,4 +78,4 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
   orcid = {0000-0001-5950-6979, 0000-0002-7603-6750, 0000-0003-3783-7069},
   license = {AGPL-3.0}
 }
-
+```
