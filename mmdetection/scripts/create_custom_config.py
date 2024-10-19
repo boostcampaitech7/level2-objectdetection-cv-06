@@ -24,6 +24,8 @@ cfg.metainfo = {
                 "Plastic", "Styrofoam", "Plastic bag", "Battery", "Clothing")
 }
 
+cfg.model.bbox_head.num_classes = len(cfg.metainfo['classes'])
+
 cfg.data_root = '../../dataset'
 # cfg.train_dataloader.dataset.dataset.ann_file = 'json/splits/train_fold4.json'
 # cfg.train_dataloader.dataset.dataset.data_root = cfg.data_root

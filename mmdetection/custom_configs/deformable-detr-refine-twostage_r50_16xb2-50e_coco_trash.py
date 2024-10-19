@@ -58,7 +58,7 @@ model = dict(
             type='FocalLoss',
             use_sigmoid=True),
         loss_iou=dict(loss_weight=2.0, type='GIoULoss'),
-        num_classes=80,
+        num_classes=10,
         sync_cls_avg_factor=True,
         type='DeformableDETRHead'),
     data_preprocessor=dict(
