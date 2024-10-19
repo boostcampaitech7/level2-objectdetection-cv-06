@@ -14,7 +14,7 @@ def xywh_to_xyxy(x_center, y_center, width, height):
 
 def main():
     # 모델 로드
-    model = YOLO('CV Object Detection/yolo11x_delete_outliers/weights/best.pt')  # 학습된 모델 경로
+    model = YOLO('CV Object Detection/yolo11x_fold4/weights/best.pt')  # 학습된 모델 경로
     
     # 테스트 데이터 경로
     test_dir = '../dataset/test'
@@ -25,7 +25,7 @@ def main():
     # 테스트 이미지에 대해 추론 수행
     for img_name in sorted(os.listdir(test_dir)):
         img_path = os.path.join(test_dir, img_name)
-        results = model(img_path, conf=0.05, iou=0.1)
+        results = model(img_path, augment=True)
 
         # 결과 처리
         predictions = []
