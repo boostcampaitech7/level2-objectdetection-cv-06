@@ -20,12 +20,11 @@ def main():
         batch=batch_size,
         device=device,
         project='CV Object Detection',
-        name='yolo11x_augmix',
-        auto_augment='augmix'
+        name='yolo11x',
     )
 
     # 학습된 모델 저장
-    model.save('yolo11x_augmix.pt')
+    model.save('yolo11x.pt')
 
 if __name__ == '__main__':
     main()
