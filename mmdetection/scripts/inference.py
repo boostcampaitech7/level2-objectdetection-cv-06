@@ -8,10 +8,10 @@ sys.path.append('..')
 
 def main():
     # 설정 파일 및 체크포인트 파일 경로
-    config_name = 'co_dino_5scale_r50_lsj_8xb2_1x_trash'
+    config_name = 'deformable-detr-refine-twostage_r50_16xb2-50e_coco_trash'
     config_file = f'../custom_configs/{config_name}.py'  # 모델 설정 파일 경로
 
-    model_epoch = 1
+    model_epoch = 50
     checkpoint_file = f'../work_dirs/{config_name}/epoch_{model_epoch}.pth'  # 체크포인트 파일 경로
 
     # 이미지 경로 및 결과 저장 경로 설정
