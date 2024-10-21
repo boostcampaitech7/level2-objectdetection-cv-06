@@ -457,6 +457,28 @@ param_scheduler = [
 pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_large_patch4_window12_384_22k.pth'
 resume = False
 test_cfg = dict(_scope_='mmdet', type='TestLoop')
+
+# TTA 설정 추가
+
+tta_model = dict(
+    type='DetTTAModel',
+    tta_cfg=dict(nms=dict(type='nms', iou_threshold=0.5),
+                 max_per_img=100))
+
+tta_pipeline = [
+    dict(type='LoadImageFromFile', backend_args=None),
+    dict(
+        type='TestTimeAug',
+        transforms=[
+            [dict(type='Resize', scale=(1333, 800), keep_ratio=True)],
+            [dict(type='RandomFlip', prob=1.), dict(type='RandomFlip', prob=0.)],
+            [dict(
+                type='PackDetInputs',
+                meta_keys=('img_id', 'img_path', 'ori_shape', 'img_shape', 
+                           'scale_factor', 'flip', 'flip_direction'))]
+        ])
+]
+
 test_dataloader = dict(
     batch_size=1,
     dataset=dict(
@@ -519,31 +541,36 @@ test_evaluator = dict(
     format_only=False,
     metric='bbox',
     type='CocoMetric')
-test_pipeline = [
-    dict(type='LoadImageFromFile'),
-    dict(keep_ratio=True, scale=(
-        1280,
-        1280,
-    ), type='Resize'),
-    dict(pad_val=dict(img=(
-        114,
-        114,
-        114,
-    )), size=(
-        1280,
-        1280,
-    ), type='Pad'),
-    dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
-    dict(
-        meta_keys=(
-            'img_id',
-            'img_path',
-            'ori_shape',
-            'img_shape',
-            'scale_factor',
-        ),
-        type='PackDetInputs'),
-]
+
+
+# 기존 test_pipeline을 tta_pipeline으로 대체
+test_pipeline = tta_pipeline
+
+# test_pipeline = [
+#     dict(type='LoadImageFromFile'),
+#     dict(keep_ratio=True, scale=(
+#         1280,
+#         1280,
+#     ), type='Resize'),
+#     dict(pad_val=dict(img=(
+#         114,
+#         114,
+#         114,
+#     )), size=(
+#         1280,
+#         1280,
+#     ), type='Pad'),
+#     dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
+#     dict(
+#         meta_keys=(
+#             'img_id',
+#             'img_path',
+#             'ori_shape',
+#             'img_shape',
+#             'scale_factor',
+#         ),
+#         type='PackDetInputs'),
+# ]
 train_cfg = dict(max_epochs=12, type='EpochBasedTrainLoop', val_interval=1)
 train_dataloader = dict(
     batch_size=1,

@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 from mmdet.apis import init_detector, inference_detector
+from mmdet.evaluation import DetTTAModel
+from mmengine import ConfigDict
 from tqdm import tqdm
 
 import sys
@@ -12,17 +14,52 @@ def main():
     config_file = f'../custom_configs/{config_name}.py'  # 모델 설정 파일 경로
 
     model_epoch = 11
-
-    checkpoint_file = '/data/ephemeral/home/Dong_yeong/level2-objectdetection-cv-06/mmdetection/work_dirs/co_dino/co_dino_swin_36.pth'
+    checkpoint_file = '/data/ephemeral/home/Dong_yeong/level2-objectdetection-cv-06/mmdetection/work_dirs/co_dino/co_dino_swin_36.pth' 
     # checkpoint_file = f'../work_dirs/{config_name}/epoch_{model_epoch}.pth'  # 체크포인트 파일 경로
 
     # 이미지 경로 및 결과 저장 경로 설정
     image_folder = '../../dataset/test'  # 이미지 폴더 경로
-    output_csv = f'../output/{config_name}_output_predictions.csv'  # 출력 CSV 파일 경로
+    output_csv = f'../output/{config_name}_output_predictions_tta.csv'  # 출력 CSV 파일 경로
 
     # 모델 초기화
     print("Initializing model...")
-    model = init_detector(config_file, checkpoint_file, device='cuda:0')
+    base_model = init_detector(config_file, checkpoint_file, device='cuda:0')
+
+    # TTA 설정
+    tta_model = dict(
+        type='DetTTAModel',
+        tta_cfg=dict(
+            nms=dict(type='nms', iou_threshold=0.5),
+            max_per_img=100))
+
+    tta_pipeline = [
+        dict(type='LoadImageFromFile'),
+        dict(
+            type='TestTimeAug',
+            transforms=[
+                [
+                    dict(type='Resize', scale=(1333, 800), keep_ratio=True),
+                    dict(type='RandomFlip', prob=1.0),
+                    dict(type='RandomFlip', prob=0.0),
+                ],
+                [
+                    dict(
+                        type='PackDetInputs',
+                        meta_keys=('img_id', 'img_path', 'ori_shape',
+                                   'img_shape', 'scale_factor', 'flip',
+                                   'flip_direction'))
+                ],
+            ])
+    ]
+
+    # TTA 모델 설정
+    cfg = ConfigDict(
+        model=ConfigDict(**tta_model, module=base_model),
+        test_pipeline=tta_pipeline
+    )
+
+    # TTA 모델 초기화
+    model = DetTTAModel(cfg, test_cfg=None)
 
     # 결과 저장 리스트
     results = []
@@ -31,7 +68,7 @@ def main():
     image_files = [f for f in sorted(os.listdir(image_folder)) if f.endswith(('.jpg', '.png'))]
 
     # 이미지 추론
-    print("Starting inference...")
+    print("Starting inference with TTA...")
     for image_name in tqdm(image_files, desc="Processing images"):
         img_path = os.path.join(image_folder, image_name)
         result = inference_detector(model, img_path)
@@ -63,7 +100,7 @@ def main():
     # CSV 파일로 저장
     print(f"Saving results to {output_csv}...")
     df.to_csv(output_csv, index=False)
-    print(f"Inference complete. Results saved to {output_csv}")
+    print(f"Inference with TTA complete. Results saved to {output_csv}")
 
 if __name__ == '__main__':
     main()

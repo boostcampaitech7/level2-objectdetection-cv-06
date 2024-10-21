@@ -1,0 +1,17 @@
+Looking in links: https://download.openmmlab.com/mmcv/dist/cu116/torch1.12.0/index.html
+Collecting mmcv-full
+  Downloading https://download.openmmlab.com/mmcv/dist/cu116/torch1.12.0/mmcv_full-1.7.2-cp310-cp310-manylinux1_x86_64.whl (44.1 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 44.1/44.1 MB 12.3 MB/s eta 0:00:00
+Requirement already satisfied: addict in /opt/conda/lib/python3.10/site-packages (from mmcv-full) (2.4.0)
+Requirement already satisfied: numpy in /opt/conda/lib/python3.10/site-packages (from mmcv-full) (1.22.4)
+Requirement already satisfied: packaging in /opt/conda/lib/python3.10/site-packages (from mmcv-full) (23.1)
+Requirement already satisfied: Pillow in /opt/conda/lib/python3.10/site-packages (from mmcv-full) (9.4.0)
+Requirement already satisfied: pyyaml in /opt/conda/lib/python3.10/site-packages (from mmcv-full) (6.0)
+Requirement already satisfied: yapf in /opt/conda/lib/python3.10/site-packages (from mmcv-full) (0.40.2)
+Requirement already satisfied: opencv-python>=3 in /opt/conda/lib/python3.10/site-packages (from mmcv-full) (4.8.1.78)
+Requirement already satisfied: importlib-metadata>=6.6.0 in /opt/conda/lib/python3.10/site-packages (from yapf->mmcv-full) (7.0.0)
+Requirement already satisfied: platformdirs>=3.5.1 in /opt/conda/lib/python3.10/site-packages (from yapf->mmcv-full) (4.1.0)
+Requirement already satisfied: tomli>=2.0.1 in /opt/conda/lib/python3.10/site-packages (from yapf->mmcv-full) (2.0.1)
+Requirement already satisfied: zipp>=0.5 in /opt/conda/lib/python3.10/site-packages (from importlib-metadata>=6.6.0->yapf->mmcv-full) (3.17.0)
+Installing collected packages: mmcv-full
+Successfully installed mmcv-full-1.7.2
