@@ -1,14 +1,16 @@
 import pandas as pd
 import numpy as np
-from ensemble_boxes import nms
+from ensemble_boxes import nms, soft_nms, non_maximum_weighted, weighted_boxes_fusion
 from pycocotools.coco import COCO
 import os
+import argparse
 
-def main():
+def main(fusion_method='nms', iou_thr=0.6):
     # ensemble할 csv 파일들
     submission_files = [
-        'output/CO-DINO(r50, lsj, default setting).csv',
-        'output/yolo11x_fold1.csv',
+        './csv/CO-DINO(SwinL + lsj)36ep.csv',
+        './csv/co-dino img size 1380 12ep.csv',
+        './csv/codinno milestone 5, 9 12ep.csv'
     ]
     submission_df = [pd.read_csv(file) for file in submission_files]
 
@@ -21,7 +23,6 @@ def main():
 
     prediction_strings = []
     file_names = []
-    iou_thr = 0.4  # NMS를 위한 IoU 임계값
 
     for i, image_id in enumerate(image_ids):
         prediction_string = ''
@@ -54,7 +55,17 @@ def main():
             labels_list.append(list(map(int, predict_list[:, 0].tolist())))
 
         if len(boxes_list):
-            boxes, scores, labels = nms(boxes_list, scores_list, labels_list, iou_thr)
+            if fusion_method == 'nms':
+                boxes, scores, labels = nms(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
+            elif fusion_method == 'soft_nms':
+                boxes, scores, labels = soft_nms(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
+            elif fusion_method == 'nmw':
+                boxes, scores, labels = non_maximum_weighted(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
+            elif fusion_method == 'wbf':
+                boxes, scores, labels = weighted_boxes_fusion(boxes_list, scores_list, labels_list, weights=None, iou_thr=iou_thr)
+            else:
+                raise ValueError("Invalid fusion method. Choose from 'nms', 'soft_nms', 'nmw', or 'wbf'.")
+
             for box, score, label in zip(boxes, scores, labels):
                 prediction_string += f"{label} {score} {box[0]*image_info['width']} {box[1]*image_info['height']} {box[2]*image_info['width']} {box[3]*image_info['height']} "
 
@@ -67,8 +78,16 @@ def main():
 
     # 결과 저장
     os.makedirs('./output', exist_ok=True)
-    submission.to_csv('./output/submission_ensemble.csv', index=False)
-    print("Ensemble result saved to ./output/submission_ensemble.csv")
+    output_file = f'./output/{fusion_method}_ensemble.csv'
+    submission.to_csv(output_file, index=False)
+    print(f"Ensemble result saved to {output_file}")
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description='Ensemble object detection results')
+    parser.add_argument('--method', type=str, default='nms', choices=['nms', 'soft_nms', 'nmw', 'wbf'],
+                        help='Fusion method to use (default: nms)')
+    parser.add_argument('--iou_thr', type=float, default=0.6,
+                        help='IoU threshold for box fusion (default: 0.6)')
+    args = parser.parse_args()
+
+    main(fusion_method=args.method, iou_thr=args.iou_thr)
