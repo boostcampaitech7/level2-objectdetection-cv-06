@@ -1,6 +1,9 @@
  # Boostcamp AI Tech 7 CV 06
  
 ## 재활용 품목 분류를 위한 Object Detection
+### 2024.10.02 11:00 ~ 2024.10.24 19:00
+
+
 ![image](https://github.com/user-attachments/assets/7dea38fd-73e4-4100-807b-179e1aac4c84)
 ### Description
 바야흐로 대량 생산, 대량 소비의 시대. 우리는 많은 물건이 대량으로 생산되고, 소비되는 시대를 살고 있습니다. 하지만 이러한 문화는 '쓰레기 대란', '매립지 부족'과 같은 여러 사회 문제를 낳고 있습니다.
@@ -14,6 +17,12 @@
 Input : 쓰레기 객체가 담긴 이미지가 모델의 인풋으로 사용됩니다. 또한 bbox 정보(좌표, 카테고리)는 model 학습 시 사용이 됩니다. bbox annotation은 COCO format으로 제공됩니다. (COCO format에 대한 설명은 학습 데이터 개요를 참고해주세요.)
 
 Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이를 submission 양식에 맞게 csv 파일을 만들어 제출합니다. (submission format에 대한 설명은 평가방법을 참고해주세요.)
+
+## Contributor
+| [![](https://avatars.githubusercontent.com/jhuni17)](https://github.com/jhuni17) | [![](https://avatars.githubusercontent.com/jung0228)](https://github.com/jung0228) | [![](https://avatars.githubusercontent.com/Jin-SukKim)](https://github.com/Jin-SukKim) | [![](https://avatars.githubusercontent.com/kimdyoc13)](https://github.com/kimdyoc13) | [![](https://avatars.githubusercontent.com/HooSlck)](https://github.com/HooSlck) | [![](https://avatars.githubusercontent.com/airacle100)](https://github.com/airacle100) |
+| ---------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
+ | [최재훈](https://github.com/jhuni17)                  | [정현우](https://github.com/jung0228)                  | [김진석](https://github.com/jung0228)                  | [김동영](https://github.com/kimdyoc13)                  | [최민석](https://github.com/HooSlck)                  | [윤정우](https://github.com/airacle100)                  |
+
 
 ## Project Structure
 - `dataset/`: Contains train and test data
