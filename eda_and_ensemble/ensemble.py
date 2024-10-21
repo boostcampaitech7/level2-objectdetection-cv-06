@@ -66,10 +66,13 @@ def main(fusion_method='nms', iou_thr=0.6):
             else:
                 raise ValueError("Invalid fusion method. Choose from 'nms', 'soft_nms', 'nmw', or 'wbf'.")
 
-            for box, score, label in zip(boxes, scores, labels):
-                prediction_string += f"{label} {score} {box[0]*image_info['width']} {box[1]*image_info['height']} {box[2]*image_info['width']} {box[3]*image_info['height']} "
+            # 클래스 레이블을 정수로 변환
+            labels = [int(label) for label in labels]
 
-        prediction_strings.append(prediction_string)
+            for box, score, label in zip(boxes, scores, labels):
+                prediction_string += f"{label} {score:.4f} {box[0]*image_info['width']:.2f} {box[1]*image_info['height']:.2f} {box[2]*image_info['width']:.2f} {box[3]*image_info['height']:.2f} "
+
+        prediction_strings.append(prediction_string.strip())
         file_names.append(image_id)
 
     submission = pd.DataFrame()
@@ -79,7 +82,7 @@ def main(fusion_method='nms', iou_thr=0.6):
     # 결과 저장
     os.makedirs('./output', exist_ok=True)
     output_file = f'./output/{fusion_method}_ensemble.csv'
-    submission.to_csv(output_file, index=False)
+    submission.to_csv(output_file, index=False, quoting=1, quotechar='"', escapechar='\\')
     print(f"Ensemble result saved to {output_file}")
 
 if __name__ == "__main__":
