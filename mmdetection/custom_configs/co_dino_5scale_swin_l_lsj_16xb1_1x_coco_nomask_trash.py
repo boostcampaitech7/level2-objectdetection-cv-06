@@ -479,6 +479,9 @@ tta_pipeline = [
         ])
 ]
 
+# 기존 test_pipeline을 tta_pipeline으로 대체
+test_pipeline = tta_pipeline
+
 test_dataloader = dict(
     batch_size=1,
     dataset=dict(
@@ -500,34 +503,7 @@ test_dataloader = dict(
                 'Battery',
                 'Clothing',
             )),
-        pipeline=[
-            dict(type='LoadImageFromFile'),
-            dict(keep_ratio=True, scale=(
-                1280,
-                1280,
-            ), type='Resize'),
-            dict(
-                pad_val=dict(img=(
-                    114,
-                    114,
-                    114,
-                )),
-                size=(
-                    1280,
-                    1280,
-                ),
-                type='Pad'),
-            dict(type='LoadAnnotations', with_bbox=True, with_mask=False),
-            dict(
-                meta_keys=(
-                    'img_id',
-                    'img_path',
-                    'ori_shape',
-                    'img_shape',
-                    'scale_factor',
-                ),
-                type='PackDetInputs'),
-        ],
+        pipeline= test_pipeline,
         test_mode=True,
         type='CocoDataset'),
     drop_last=False,
@@ -543,8 +519,7 @@ test_evaluator = dict(
     type='CocoMetric')
 
 
-# 기존 test_pipeline을 tta_pipeline으로 대체
-test_pipeline = tta_pipeline
+
 
 # test_pipeline = [
 #     dict(type='LoadImageFromFile'),
