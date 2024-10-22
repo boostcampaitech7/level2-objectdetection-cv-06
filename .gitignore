@@ -12,3 +12,4 @@ csv/
 submission.csv
 *.pt
 nohup.out
+submission/
