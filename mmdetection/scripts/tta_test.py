@@ -9,6 +9,7 @@ from mmcv import imflip, imrotate
 
 sys.path.append('..')
 
+
 def apply_tta(model, img_path):
     # 이미지 경로에서 이미지를 로드
     img = mmcv.imread(img_path)
