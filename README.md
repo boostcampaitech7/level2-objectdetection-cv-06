@@ -60,8 +60,12 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
 - map-boxes==1.0.5
 - jupyter==1.0.0
 - openmim
-- mmcv>=2.0.0, <2.2.0
+- mmengine
+- mmcv>=2.0.0rc4, <2.2.0
 - mmdet=3.3.0
+- ultralytics
+- iterative-stratification
+- ensemble_boxes
 
 ## Citation
 
