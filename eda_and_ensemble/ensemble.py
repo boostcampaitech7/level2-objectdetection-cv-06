@@ -60,9 +60,9 @@ def main(fusion_method='nms', iou_thr=0.6):
             elif fusion_method == 'soft_nms':
                 boxes, scores, labels = soft_nms(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
             elif fusion_method == 'nmw':
-                boxes, scores, labels = non_maximum_weighted(boxes_list, scores_list, labels_list, iou_thr=iou_thr)
+                boxes, scores, labels = non_maximum_weighted(boxes_list, scores_list, labels_list, weights=weights, iou_thr=iou_thr)
             elif fusion_method == 'wbf':
-                boxes, scores, labels = weighted_boxes_fusion(boxes_list, scores_list, labels_list, weights=None, iou_thr=iou_thr)
+                boxes, scores, labels = weighted_boxes_fusion(boxes_list, scores_list, labels_list, weights=weights, iou_thr=iou_thr)
             else:
                 raise ValueError("Invalid fusion method. Choose from 'nms', 'soft_nms', 'nmw', or 'wbf'.")
 
@@ -86,6 +86,7 @@ def main(fusion_method='nms', iou_thr=0.6):
     print(f"Ensemble result saved to {output_file}")
 
 if __name__ == "__main__":
+    weights = [1, 1.2, 0.8]
     parser = argparse.ArgumentParser(description='Ensemble object detection results')
     parser.add_argument('--method', type=str, default='nms', choices=['nms', 'soft_nms', 'nmw', 'wbf'],
                         help='Fusion method to use (default: nms)')
