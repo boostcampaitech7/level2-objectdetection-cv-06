@@ -1,14 +1,17 @@
+__pycache__/
 dataset/
 baseline/
 sample_submission/
 output/
 train_result/
 CV Object Detection/
-__pycache__/
 runs/
 wandb/
 results/
 csv/
+
 submission.csv
-*.pt
 nohup.out
+
+*.pt
+*.pth

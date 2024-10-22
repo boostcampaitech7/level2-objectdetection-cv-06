@@ -9,4 +9,10 @@ torchnet==0.0.4
 pandas
 map-boxes==1.0.5
 jupyter==1.0.0
+openmim
+mmengine
+mmcv>=2.0.0rc4, <2.2.0
+mmdet==3.3.0
+ultralytics
 iterative-stratification
+ensemble_boxes
