@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
-import cv2
 from PIL import ImageFont, ImageDraw, Image
-import numpy as np
 import os
 from PIL import Image, ImageDraw, ImageFont
 
@@ -101,33 +99,31 @@ def main():
         if 'image_index' not in st.session_state:
             st.session_state.image_index = 0
 
-        def update_index():
-            st.session_state.image_index = image_index
-
-        # 이미지 선택을 위한 슬라이더와 +/- 버튼, 그리고 드롭다운 메뉴
+        # 이미지 선택을 위한 슬라이더와 +/- 버튼, 그리고 직접 입력
         col1, col2, col3, col4 = st.columns([1, 3, 1, 2])
         with col1:
             if st.button("➖"):
                 st.session_state.image_index = max(0, st.session_state.image_index - 1)
         with col2:
-            image_index = st.slider("Select an image", 0, len(image_files)-1, st.session_state.image_index, on_change=update_index)
+            st.session_state.image_index = st.slider("Select an image", 0, len(image_files)-1, st.session_state.image_index)
         with col3:
             if st.button("➕"):
                 st.session_state.image_index = min(len(image_files)-1, st.session_state.image_index + 1)
         with col4:
-            selected_image = st.selectbox("Or choose an image", image_files, index=st.session_state.image_index, on_change=update_index)
+            input_index = st.number_input("Enter image number", min_value=0, max_value=len(image_files)-1, value=st.session_state.image_index)
+            if input_index != st.session_state.image_index:
+                st.session_state.image_index = input_index
 
-        st.session_state.image_index = image_files.index(selected_image)
+        selected_image = image_files[st.session_state.image_index]
 
         # 예측 확률 임계값 설정을 위한 슬라이더 추가
         confidence_threshold = st.slider("Confidence Threshold", 0.0, 1.0, 0.5, 0.01)
-
 
         if selected_image:
             image_path = os.path.join(test_image_dir, selected_image)
             image = load_image(image_path)
 
-            st.image(image, caption="Original Image", use_column_width=True)
+            st.image(image, caption=f"Original Image (Image {st.session_state.image_index})", use_column_width=True)
 
             # CSV 파일에서 해당 이미지의 예측 결과 가져오기
             predictions1 = df1[df1['image_id'] == selected_image]
