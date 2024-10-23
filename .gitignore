@@ -9,6 +9,7 @@ runs/
 wandb/
 results/
 csv/
+demo/
 
 submission.csv
 nohup.out
