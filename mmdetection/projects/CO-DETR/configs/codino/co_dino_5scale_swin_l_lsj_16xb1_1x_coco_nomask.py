@@ -1,6 +1,6 @@
 _base_ = ['co_dino_5scale_r50_lsj_8xb2_1x_coco_nomask.py']
 
-image_size = (1280, 1280)
+image_size = (1380, 1380) # 1280 -> 1380
 batch_augments = [
     dict(type='BatchFixedSizePad', size=image_size, pad_mask=True)
 ]
