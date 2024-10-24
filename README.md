@@ -5,7 +5,7 @@
 
 
 ![image](https://github.com/user-attachments/assets/7dea38fd-73e4-4100-807b-179e1aac4c84)
-### Description
+## Description
 바야흐로 대량 생산, 대량 소비의 시대. 우리는 많은 물건이 대량으로 생산되고, 소비되는 시대를 살고 있습니다. 하지만 이러한 문화는 '쓰레기 대란', '매립지 부족'과 같은 여러 사회 문제를 낳고 있습니다.
 
 분리수거는 이러한 환경 부담을 줄일 수 있는 방법 중 하나입니다. 잘 분리배출 된 쓰레기는 자원으로서 가치를 인정받아 재활용되지만, 잘못 분리배출 되면 그대로 폐기물로 분류되어 매립 또는 소각되기 때문입니다.
@@ -21,7 +21,7 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
 Test set의 mAP50(Mean Average Precision)로 평가합니다.
 
 
-### Result
+## Result
 ![image](https://github.com/user-attachments/assets/e60242a5-b0ad-463a-bf05-11808a3d3caa)
 
 최종 리더보드 순위 5등 달성
