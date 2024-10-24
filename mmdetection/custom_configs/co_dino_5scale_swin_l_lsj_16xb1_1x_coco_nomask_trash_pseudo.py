@@ -72,7 +72,7 @@ log_level = 'INFO'
 log_processor = dict(
     _scope_='mmdet', by_epoch=True, type='LogProcessor', window_size=50)
 loss_lambda = 2.0
-max_epochs = 12
+max_epochs = 2
 max_iters = 270000
 metainfo = dict(
     classes=(
@@ -445,12 +445,14 @@ optim_wrapper = dict(
     type='OptimWrapper')
 param_scheduler = [
     dict(
-        T_max=4,
         begin=0,
         by_epoch=True,
         end=12,
-        eta_min=1e-06,
-        type='CosineAnnealingLR'),
+        gamma=0.1,
+        milestones=[
+            1,
+        ],
+        type='MultiStepLR'),
 ]
 pretrained = 'https://github.com/SwinTransformer/storage/releases/download/v1.0.0/swin_large_patch4_window12_384_22k.pth'
 resume = False
@@ -542,7 +544,7 @@ test_pipeline = [
         ),
         type='PackDetInputs'),
 ]
-train_cfg = dict(max_epochs=12, type='EpochBasedTrainLoop', val_interval=1)
+train_cfg = dict(max_epochs=2, type='EpochBasedTrainLoop', val_interval=1)
 train_dataloader = dict(
     batch_size=1,
     dataset=dict(

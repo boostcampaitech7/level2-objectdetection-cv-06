@@ -16,7 +16,7 @@ cfg.train_dataloader.num_workers = 8
 
 cfg.model.backbone.frozen_stages = -1
 
-cfg.max_epochs = 12
+cfg.max_epochs = 2
 cfg.train_cfg.max_epochs = cfg.max_epochs
 
 cfg.metainfo = {
@@ -46,7 +46,7 @@ cfg.test_evaluator = cfg.val_evaluator
 cfg.default_hooks.checkpoint = dict(type='CheckpointHook', interval=1, max_keep_ckpts=2, save_best='auto')
 
 # Interval of reporting indicators
-cfg.default_hooks.logger.interval = 100
+cfg.default_hooks.logger.interval = 1
 
 cfg.device = 'cuda'
 
@@ -55,9 +55,11 @@ cfg.param_scheduler = [
         begin=0,
         by_epoch=True,
         end=12,
-        T_max=4,
-        eta_min=1e-6,
-        type='CosineAnnealingLR'),
+        gamma=0.1,
+        milestones=[
+            1,
+        ],
+        type='MultiStepLR'),
 ]
 
 set_random_seed(42, deterministic=False)
