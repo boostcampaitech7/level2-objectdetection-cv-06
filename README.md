@@ -25,26 +25,75 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
 
 
 ## Project Structure
-- `dataset/`: Contains train and test data
-- `eda/` : Code related to EDA
-- `src/`: Source code for the project
-- `utils/`: Utility functions
-- `configs/`: Configuration files
-- `scripts/`: Project execution files
-  
 
+```
+.
+├── README.md
+├── dataset/                  # 데이터셋
+│   ├── images/
+│   ├── json/
+│   ├── labels/
+│   ├── test/
+│   ├── train/
+│   └── yaml/
+├── eda_and_ensemble/         # EDA 및 앙상블 관련 코드
+│   ├── csv/
+│   ├── output/
+│   ├── dataset_viewer.py
+│   ├── eda.ipynb
+│   ├── ensemble.py
+│   └── filter_low_confidence.py
+├── mmdetection/              # MMDetection 프레임워크
+│   ├── checkpoints/
+│   ├── custom_configs/
+│   ├── scripts/
+│   │   ├── 
+│   └── work_dirs/
+├── yolo/                     # YOLO 관련 코드 및 모델
+│   ├── check_kfold_ditribution.py
+│   ├── convert_coco_to_yolo.py
+│   ├── convert_coco_to_yolo_random_split.py
+│   ├── inference.py
+│   ├── train.py
+└── requirements.txt          # 프로젝트 의존성
+```
+
+- `dataset/`: 학습 및 테스트에 사용되는 데이터셋
+- `eda_and_ensemble/`: 탐색적 데이터 분석(EDA) 및 앙상블 관련 코드
+- `mmdetection/`: MMDetection 프레임워크 및 관련 설정 파일
+- `yolo/`: YOLO 모델 관련 코드 및 학습된 모델 파일
+- `requirements.txt`: 프로젝트 실행에 필요한 Python 패키지 목록
+
+  
 ## Usage
 
-1. Prepare your data in the `data/` directory.
-2. Adjust the configuration in `configs/config.json` if needed.
-3. Run training:
+### Data Preparation
+1. 데이터셋을 `dataset/` 디렉토리에 준비합니다.
+2. COCO 형식의 데이터를 YOLO 형식으로 변환하려면:
    ```
-   python scripts/train.py
+   python yolo/convert_coco_to_yolo.py
    ```
-4. Run inference:
+
+### Training
+1. MMDetection을 사용한 학습:
    ```
-   python scripts/inference.py
+   python mmdetection/scripts/train.py configs/your_config.py
    ```
+2. YOLO 모델 학습:
+   ```
+   python yolo/train.py
+   ```
+
+### Inference
+1. MMDetection을 사용한 추론:
+   ```
+   python mmdetection/scripts/inference.py configs/your_config.py /path/to/checkpoint
+   ```
+2. YOLO 모델 추론:
+   ```
+   python yolo/inference.py
+   ```
+
 
 ## Requirements
 
@@ -66,6 +115,7 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
 - ultralytics
 - iterative-stratification
 - ensemble_boxes
+
 
 ## Citation
 
