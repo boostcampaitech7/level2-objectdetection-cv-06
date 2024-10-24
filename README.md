@@ -80,27 +80,32 @@ Test set의 mAP50(Mean Average Precision)로 평가합니다.
 1. 데이터셋을 `dataset/` 디렉토리에 준비합니다.
 2. COCO 형식의 데이터를 YOLO 형식으로 변환하려면:
    ```
-   python yolo/convert_coco_to_yolo.py
+   cd yolo
+   python convert_coco_to_yolo.py
    ```
 
 ### Training
 1. MMDetection을 사용한 학습:
    ```
-   python mmdetection/scripts/train.py configs/your_config.py
+   cd mmdetection/scripts
+   python train.py ../custom_configs/your_config.py
    ```
 2. YOLO 모델 학습:
    ```
-   python yolo/train.py
+   cd yolo
+   python train.py
    ```
 
 ### Inference
 1. MMDetection을 사용한 추론:
    ```
-   python mmdetection/scripts/inference.py configs/your_config.py /path/to/checkpoint
+   cd mmdetection/scripts
+   python inference.py
    ```
 2. YOLO 모델 추론:
    ```
-   python yolo/inference.py
+   cd yolo
+   python inference.py
    ```
 
 
