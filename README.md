@@ -30,7 +30,7 @@ Test set의 mAP50(Mean Average Precision)로 평가합니다.
 ## Contributor
 | [![](https://avatars.githubusercontent.com/jhuni17)](https://github.com/jhuni17) | [![](https://avatars.githubusercontent.com/jung0228)](https://github.com/jung0228) | [![](https://avatars.githubusercontent.com/Jin-SukKim)](https://github.com/Jin-SukKim) | [![](https://avatars.githubusercontent.com/kimdyoc13)](https://github.com/kimdyoc13) | [![](https://avatars.githubusercontent.com/HooSlck)](https://github.com/HooSlck) | [![](https://avatars.githubusercontent.com/airacle100)](https://github.com/airacle100) |
 | ---------------------------------------------------- | ------------------------------------------------------ | --------------------------------------------------- | ------------------------------------------------------- | ----------------------------------------------------- | ----------------------------------------------------- |
- | [최재훈](https://github.com/jhuni17)                  | [정현우](https://github.com/jung0228)                  | [김진석](https://github.com/Jin-SukKim)                  | [김동영](https://github.com/kimdyoc13)                  | [최민석](https://github.com/HooSlck)                  | [윤정우](https://github.com/airacle100)                  |
+ | [최재훈](https://github.com/jhuni17)                  | [정현우](https://github.com/jung0228)                  | [김진석](https://github.com/Jin-SukKim)                  | [김동영](https://github.com/kimdyoc13)                  | [최민석](https://github.com/MinSeok1204)                  | [윤정우](https://github.com/airacle100)                  |
 
 
 ## Project Structure
