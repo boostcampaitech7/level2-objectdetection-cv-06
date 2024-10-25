@@ -5,7 +5,7 @@
 
 
 ![image](https://github.com/user-attachments/assets/7dea38fd-73e4-4100-807b-179e1aac4c84)
-### Description
+## Description
 바야흐로 대량 생산, 대량 소비의 시대. 우리는 많은 물건이 대량으로 생산되고, 소비되는 시대를 살고 있습니다. 하지만 이러한 문화는 '쓰레기 대란', '매립지 부족'과 같은 여러 사회 문제를 낳고 있습니다.
 
 분리수거는 이러한 환경 부담을 줄일 수 있는 방법 중 하나입니다. 잘 분리배출 된 쓰레기는 자원으로서 가치를 인정받아 재활용되지만, 잘못 분리배출 되면 그대로 폐기물로 분류되어 매립 또는 소각되기 때문입니다.
@@ -14,9 +14,18 @@
 
 여러분에 의해 만들어진 우수한 성능의 모델은 쓰레기장에 설치되어 정확한 분리수거를 돕거나, 어린아이들의 분리수거 교육 등에 사용될 수 있을 것입니다. 부디 지구를 위기로부터 구해주세요! 🌎
 
-Input : 쓰레기 객체가 담긴 이미지가 모델의 인풋으로 사용됩니다. 또한 bbox 정보(좌표, 카테고리)는 model 학습 시 사용이 됩니다. bbox annotation은 COCO format으로 제공됩니다. (COCO format에 대한 설명은 학습 데이터 개요를 참고해주세요.)
+Input : 쓰레기 객체가 담긴 이미지가 모델의 인풋으로 사용됩니다. 또한 bbox 정보(좌표, 카테고리)는 model 학습 시 사용이 됩니다. bbox annotation은 COCO format으로 제공됩니다.
 
-Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이를 submission 양식에 맞게 csv 파일을 만들어 제출합니다. (submission format에 대한 설명은 평가방법을 참고해주세요.)
+Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이를 submission 양식에 맞게 csv 파일을 만들어 제출합니다.
+
+Test set의 mAP50(Mean Average Precision)로 평가합니다.
+
+
+## Result
+![image](https://github.com/user-attachments/assets/e60242a5-b0ad-463a-bf05-11808a3d3caa)
+
+최종 리더보드 순위 5등 달성
+
 
 ## Contributor
 | [![](https://avatars.githubusercontent.com/jhuni17)](https://github.com/jhuni17) | [![](https://avatars.githubusercontent.com/jung0228)](https://github.com/jung0228) | [![](https://avatars.githubusercontent.com/Jin-SukKim)](https://github.com/Jin-SukKim) | [![](https://avatars.githubusercontent.com/kimdyoc13)](https://github.com/kimdyoc13) | [![](https://avatars.githubusercontent.com/HooSlck)](https://github.com/HooSlck) | [![](https://avatars.githubusercontent.com/airacle100)](https://github.com/airacle100) |
@@ -25,26 +34,80 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
 
 
 ## Project Structure
-- `dataset/`: Contains train and test data
-- `eda/` : Code related to EDA
-- `src/`: Source code for the project
-- `utils/`: Utility functions
-- `configs/`: Configuration files
-- `scripts/`: Project execution files
-  
 
+```
+.
+├── README.md
+├── dataset/                  # 데이터셋
+│   ├── images/
+│   ├── json/
+│   ├── labels/
+│   ├── test/
+│   ├── train/
+│   └── yaml/
+├── eda_and_ensemble/         # EDA 및 앙상블 관련 코드
+│   ├── csv/
+│   ├── output/
+│   ├── dataset_viewer.py
+│   ├── eda.ipynb
+│   ├── ensemble.py
+│   └── filter_low_confidence.py
+├── mmdetection/              # MMDetection 프레임워크
+│   ├── checkpoints/
+│   ├── custom_configs/
+│   ├── scripts/
+│   │   ├── 
+│   └── work_dirs/
+├── yolo/                     # YOLO 관련 코드 및 모델
+│   ├── check_kfold_ditribution.py
+│   ├── convert_coco_to_yolo.py
+│   ├── convert_coco_to_yolo_random_split.py
+│   ├── inference.py
+│   ├── train.py
+└── requirements.txt          # 프로젝트 의존성
+```
+
+- `dataset/`: 학습 및 테스트에 사용되는 데이터셋
+- `eda_and_ensemble/`: 탐색적 데이터 분석(EDA) 및 앙상블 관련 코드
+- `mmdetection/`: MMDetection 프레임워크 및 관련 설정 파일
+- `yolo/`: YOLO 모델 관련 코드 및 학습된 모델 파일
+- `requirements.txt`: 프로젝트 실행에 필요한 Python 패키지 목록
+
+  
 ## Usage
 
-1. Prepare your data in the `data/` directory.
-2. Adjust the configuration in `configs/config.json` if needed.
-3. Run training:
+### Data Preparation
+1. 데이터셋을 `dataset/` 디렉토리에 준비합니다.
+2. COCO 형식의 데이터를 YOLO 형식으로 변환하려면:
    ```
-   python scripts/train.py
+   cd yolo
+   python convert_coco_to_yolo.py
    ```
-4. Run inference:
+
+### Training
+1. MMDetection을 사용한 학습:
    ```
-   python scripts/inference.py
+   cd mmdetection/scripts
+   python train.py ../custom_configs/your_config.py
    ```
+2. YOLO 모델 학습:
+   ```
+   cd yolo
+   python train.py
+   ```
+
+### Inference
+1. MMDetection을 사용한 추론:
+   ```
+   cd mmdetection/scripts
+   python inference.py
+   ```
+2. YOLO 모델 추론:
+   ```
+   cd yolo
+   python inference.py
+   ```
+
 
 ## Requirements
 
@@ -66,6 +129,7 @@ Output : 모델은 bbox 좌표, 카테고리, score 값을 리턴합니다. 이�
 - ultralytics
 - iterative-stratification
 - ensemble_boxes
+
 
 ## Citation
 
