@@ -24,7 +24,7 @@ Test set의 mAP50(Mean Average Precision)로 평가합니다.
 ## Result
 ![image](https://github.com/user-attachments/assets/e60242a5-b0ad-463a-bf05-11808a3d3caa)
 
-최종 리더보드 순위 5등 달성
+최종 mAP50 0.7344로 리더보드 순위 5등 달성
 
 
 ## Contributor
@@ -39,32 +39,39 @@ Test set의 mAP50(Mean Average Precision)로 평가합니다.
 .
 ├── README.md
 ├── dataset/                  # 데이터셋
-│   ├── images/
-│   ├── json/
-│   ├── labels/
-│   ├── test/
-│   ├── train/
-│   └── yaml/
+│   ├── images/                   # YOLO 기반 모델 학습을 위한 이미지 데이터
+│   ├── json/                     # COCO 형식의 JSON 어노테이션 파일
+│   ├── labels/                   # YOLO 형식의 레이블 파일
+│   ├── test/                     # 테스트 데이터셋 이미지
+│   ├── train/                    # 학습 데이터셋 이미지
+│   └── yaml/                     # YOLO 모델 설정을 위한 YAML 파일
+│
 ├── eda_and_ensemble/         # EDA 및 앙상블 관련 코드
-│   ├── csv/
-│   ├── output/
-│   ├── dataset_viewer.py
-│   ├── eda.ipynb
-│   ├── ensemble.py
-│   └── filter_low_confidence.py
+│   ├── csv/                      # CSV 파일 저장 디렉토리
+│   ├── output/                   # 출력 결과 저장 디렉토리
+│   ├── dataset_viewer.py         # 데이터셋 시각화 도구
+│   ├── ensemble.py               # 여러 모델의 결과를 앙상블하는 스크립트
+│   └── filter_low_confidence.py  # 낮은 신뢰도의 예측을 필터링하는 스크립트
+│
 ├── mmdetection/              # MMDetection 프레임워크
-│   ├── checkpoints/
-│   ├── custom_configs/
+│   ├── checkpoints/              # pretrained pth 저장 디렉토리
+│   ├── custom_configs/           # 사용자 정의 config 저장 디렉토리
 │   ├── scripts/
-│   │   ├── 
-│   └── work_dirs/
+│   │   ├── train.py                    # MMDetection 모델 학습 스크립트
+│   │   ├── split_coco_data.py          # COCO 데이터셋을 K-fold로 분할하는 스크립트
+│   │   ├── merge_coco_jsons.py         # 여러 COCO JSON 파일을 병합하는 스크립트
+│   │   ├── inference.py                # 학습된 모델을 사용한 추론 스크립트
+│   │   ├── create_pseudo_labels.py     # Pseudo-label 생성 스크립트
+│   │   └── create_custom_config.py     # 사용자 정의 config 파일 생성
+│   └── work_dirs/                # 모델 학습 결과 저장 디렉토리
+│
 ├── yolo/                     # YOLO 관련 코드 및 모델
-│   ├── check_kfold_ditribution.py
-│   ├── convert_coco_to_yolo.py
-│   ├── convert_coco_to_yolo_random_split.py
-│   ├── inference.py
-│   ├── train.py
-└── requirements.txt          # 프로젝트 의존성
+│   ├── check_kfold_ditribution.py            # K-fold 데이터 분포 확인 스크립트
+│   ├── convert_coco_to_yolo.py               # COCO 형식을 YOLO 형식으로 변환하는 스크립트 (K-fold 적용)
+│   ├── convert_coco_to_yolo_random_split.py  # COCO 형식을 YOLO 형식으로 변환하는 스크립트 (랜덤 분할)
+│   ├── inference.py                          # YOLO 모델을 사용한 추론 스크립트
+│   └── train.py                              # YOLO 모델 학습 스크립트
+└── requirements.txt         
 ```
 
 - `dataset/`: 학습 및 테스트에 사용되는 데이터셋
@@ -77,7 +84,7 @@ Test set의 mAP50(Mean Average Precision)로 평가합니다.
 ## Usage
 
 ### Data Preparation
-1. 데이터셋을 `dataset/` 디렉토리에 준비합니다.
+1. 데이터셋을 `dataset/` 디렉토리에 준비한다.
 2. COCO 형식의 데이터를 YOLO 형식으로 변환하려면:
    ```
    cd yolo
