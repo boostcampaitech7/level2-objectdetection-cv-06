@@ -63,7 +63,8 @@ Test set의 mAP50(Mean Average Precision)로 평가합니다.
 │   │   ├── inference.py                # 학습된 모델을 사용한 추론 스크립트
 │   │   ├── create_pseudo_labels.py     # Pseudo-label 생성 스크립트
 │   │   └── create_custom_config.py     # 사용자 정의 config 파일 생성
-│   └── work_dirs/                # 모델 학습 결과 저장 디렉토리
+│   ├── work_dirs/                # 모델 학습 결과 저장 디렉토리
+│   └── ...                       # 기존 MMDetection library구조
 │
 ├── yolo/                     # YOLO 관련 코드 및 모델
 │   ├── check_kfold_ditribution.py            # K-fold 데이터 분포 확인 스크립트
