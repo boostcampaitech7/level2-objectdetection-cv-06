@@ -2,7 +2,6 @@ import streamlit as st
 import pandas as pd
 from PIL import ImageFont, ImageDraw, Image
 import os
-from PIL import Image, ImageDraw, ImageFont
 
 # 클래스 이름 정의
 CLASS_NAMES = ['General trash', 'Paper', 'Paper pack', 'Metal', 'Glass', 'Plastic', 'Styrofoam', 'Plastic bag', 'Battery', 'Clothing']
@@ -99,7 +98,7 @@ def main():
         if 'image_index' not in st.session_state:
             st.session_state.image_index = 0
 
-        # 이미지 선택을 위한 슬라이더와 +/- 버튼, 그리고 직접 입력
+        # 이미지 선택을 위한 UI 구성
         col1, col2, col3, col4 = st.columns([1, 3, 1, 2])
         with col1:
             if st.button("➖"):

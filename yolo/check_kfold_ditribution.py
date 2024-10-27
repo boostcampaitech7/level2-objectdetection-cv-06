@@ -5,10 +5,12 @@ import pandas as pd
 import numpy as np
 
 def load_json(file_path):
+    """JSON 파일을 로드"""
     with open(file_path, 'r') as f:
         return json.load(f)
 
 def get_class_distribution(data):
+    """데이터셋의 클래스 분포를 계산"""
     class_counts = {}
     for ann in data['annotations']:
         category_id = ann['category_id']
@@ -18,6 +20,7 @@ def get_class_distribution(data):
     return class_counts
 
 def plot_class_distribution(distributions, title):
+    """클래스 분포를 히트맵으로 시각화"""
     df = pd.DataFrame(distributions).fillna(0)
     df = df.reindex(sorted(df.columns), axis=1)
     
@@ -34,9 +37,11 @@ train_distributions = []
 val_distributions = []
 
 for fold in range(1, 6):  # 5-fold
+    # 각 fold의 훈련 및 검증 데이터 로드
     train_data = load_json(f'../dataset/json/train_yolo_fold{fold}.json')
     val_data = load_json(f'../dataset/json/val_yolo_fold{fold}.json')
     
+    # 클래스 분포 계산
     train_dist = get_class_distribution(train_data)
     val_dist = get_class_distribution(val_data)
     

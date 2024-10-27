@@ -11,7 +11,7 @@ from sklearn.preprocessing import MultiLabelBinarizer
 
 def convert_bbox_coco2yolo(img_width, img_height, bbox):
     """
-    COCO 형식의 바운딩 박스를 YOLO 형식으로 변환합니다.
+    COCO 형식의 바운딩 박스를 YOLO 형식으로 변환
     COCO bbox: [x_min, y_min, width, height]
     YOLO bbox: [x_center, y_center, width, height] (모두 0~1로 정규화)
     """
@@ -25,6 +25,9 @@ def convert_bbox_coco2yolo(img_width, img_height, bbox):
     return [x_center, y_center, width, height]
 
 def split_coco_data(json_file, n_splits=5):
+    """
+    COCO 데이터를 MultilabelStratifiedKFold를 사용하여 n_splits개의 폴드로 분할
+    """
     with open(json_file, 'r') as f:
         data = json.load(f)
 
@@ -76,29 +79,22 @@ def split_coco_data(json_file, n_splits=5):
 
 def coco2yolo(coco_data, output_path):
     """
-    COCO 데이터를 YOLO 형식으로 변환합니다.
+    COCO 데이터를 YOLO 형식으로 변환
     """
-    # 출력 디렉토리가 없으면 생성
     os.makedirs(output_path, exist_ok=True)
 
-    # 이미지 ID를 파일 이름에 매핑
     image_id_to_name = {img['id']: img['file_name'] for img in coco_data['images']}
-
-    # 카테고리 ID를 인덱스에 매핑 (YOLO는 0부터 시작하는 정수 클래스를 사용)
     category_id_to_index = {cat['id']: idx for idx, cat in enumerate(coco_data['categories'])}
 
-    # 각 이미지에 대한 주석을 처리
     for img in tqdm(coco_data['images'], desc="Converting annotations"):
         img_id = img['id']
         img_name = image_id_to_name[img_id]
         img_width = img['width']
         img_height = img['height']
 
-        # YOLO 형식의 레이블 파일 이름 생성
         label_name = os.path.splitext(os.path.basename(img_name))[0] + '.txt'
         label_path = os.path.join(output_path, label_name)
 
-        # 이 이미지에 대한 모든 주석 찾기
         annotations = [ann for ann in coco_data['annotations'] if ann['image_id'] == img_id]
 
         with open(label_path, 'w') as f:
@@ -112,7 +108,7 @@ def coco2yolo(coco_data, output_path):
 
 def copy_images(coco_data, src_dir, dst_dir):
     """
-    이미지를 소스 디렉토리에서 대상 디렉토리로 복사합니다.
+    이미지를 소스 디렉토리에서 대상 디렉토리로 복사
     """
     os.makedirs(dst_dir, exist_ok=True)
     for img in tqdm(coco_data['images'], desc=f"Copying images to {dst_dir}"):
@@ -126,11 +122,13 @@ def copy_images(coco_data, src_dir, dst_dir):
         else:
             print(f"Warning: Source file not found: {src_path}")
 
-# 실행
+# 메인 실행 부분
+# COCO 데이터를 5개의 폴드로 분할
 fold_data = split_coco_data('../dataset/json/train.json', n_splits=5)
 
+# 각 폴드에 대해 처리
 for fold, (train_data, val_data) in enumerate(fold_data, 1):
-    # train_yolo.json과 val_yolo.json 저장
+    # 각 폴드의 train과 validation 데이터를 JSON으로 저장
     with open(f'../dataset/json/train_yolo_fold{fold}.json', 'w') as f:
         json.dump(train_data, f)
     with open(f'../dataset/json/val_yolo_fold{fold}.json', 'w') as f:
@@ -159,7 +157,7 @@ for fold, (train_data, val_data) in enumerate(fold_data, 1):
 
     print(f"Dataset configuration for fold {fold} saved as dataset_fold{fold}.yaml")
 
-# test 데이터 처리
+# 테스트 데이터 처리
 with open('../dataset/json/test.json', 'r') as f:
     test_data = json.load(f)
 test_categories = coco2yolo(test_data, '../dataset/labels/test')

@@ -8,7 +8,7 @@ import numpy as np
 
 def convert_bbox_coco2yolo(img_width, img_height, bbox):
     """
-    COCO 형식의 바운딩 박스를 YOLO 형식으로 변환합니다.
+    COCO 형식의 바운딩 박스를 YOLO 형식으로 변환
     COCO bbox: [x_min, y_min, width, height]
     YOLO bbox: [x_center, y_center, width, height] (모두 0~1로 정규화)
     """
@@ -22,6 +22,9 @@ def convert_bbox_coco2yolo(img_width, img_height, bbox):
     return [x_center, y_center, width, height]
 
 def split_coco_data(json_file, train_ratio=0.8, random_seed=42):
+    """
+    COCO 데이터를 훈련 세트와 검증 세트로 무작위 분할
+    """
     with open(json_file, 'r') as f:
         data = json.load(f)
 
@@ -31,7 +34,7 @@ def split_coco_data(json_file, train_ratio=0.8, random_seed=42):
     image_ids = [img['id'] for img in data['images']]
     random.shuffle(image_ids)
 
-    # 8:2 비율로 분할
+    # 지정된 비율로 분할
     split_index = int(len(image_ids) * train_ratio)
     train_ids = set(image_ids[:split_index])
     val_ids = set(image_ids[split_index:])
@@ -52,10 +55,11 @@ def split_coco_data(json_file, train_ratio=0.8, random_seed=42):
 
 def coco2yolo(coco_data, output_path):
     """
-    COCO 데이터를 YOLO 형식으로 변환합니다.
+    COCO 데이터를 YOLO 형식으로 변환
     """
     os.makedirs(output_path, exist_ok=True)
 
+    # 이미지 ID와 파일 이름, 카테고리 ID와 인덱스 매핑
     image_id_to_name = {img['id']: img['file_name'] for img in coco_data['images']}
     category_id_to_index = {cat['id']: idx for idx, cat in enumerate(coco_data['categories'])}
 
@@ -81,7 +85,7 @@ def coco2yolo(coco_data, output_path):
 
 def copy_images(coco_data, src_dir, dst_dir):
     """
-    이미지를 소스 디렉토리에서 대상 디렉토리로 복사합니다.
+    이미지를 소스 디렉토리에서 대상 디렉토리로 복사
     """
     os.makedirs(dst_dir, exist_ok=True)
     for img in tqdm(coco_data['images'], desc=f"Copying images to {dst_dir}"):
@@ -95,16 +99,17 @@ def copy_images(coco_data, src_dir, dst_dir):
         else:
             print(f"Warning: Source file not found: {src_path}")
 
-# 실행
+# 메인 실행 부분
+# COCO 데이터를 훈련 세트와 검증 세트로 분할
 train_data, val_data = split_coco_data('../dataset/json/train.json', train_ratio=0.8, random_seed=42)
 
-# train_yolo.json과 val_yolo.json 저장
+# 분할된 데이터를 JSON 파일로 저장
 with open('../dataset/json/train_yolo.json', 'w') as f:
     json.dump(train_data, f)
 with open('../dataset/json/val_yolo.json', 'w') as f:
     json.dump(val_data, f)
 
-# 이미지 복사
+# 이미지 파일 복사
 copy_images(train_data, '../dataset/train', '../dataset/images/train_yolo')
 copy_images(val_data, '../dataset/train', '../dataset/images/val_yolo')
 
@@ -127,7 +132,7 @@ with open('../dataset/yaml/dataset.yaml', 'w') as f:
 
 print("Dataset configuration saved as dataset.yaml")
 
-# test 데이터 처리
+# 테스트 데이터 처리
 with open('../dataset/json/test.json', 'r') as f:
     test_data = json.load(f)
 test_categories = coco2yolo(test_data, '../dataset/labels/test')
