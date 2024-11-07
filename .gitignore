@@ -1,0 +1,18 @@
+__pycache__/
+dataset/
+baseline/
+sample_submission/
+output/
+train_result/
+CV Object Detection/
+runs/
+wandb/
+results/
+csv/
+demo/
+
+submission.csv
+nohup.out
+
+*.pt
+*.pth
